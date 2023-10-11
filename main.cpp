@@ -9,10 +9,10 @@
 class PasswordManager
 {
 public:
-    void CreateLogin()
+    void createLogin()
     {
         std::string loginName;
-        std::cout << "\nEnter login: ";
+        std::cout << "\nEnter login(gmail): ";
         std::cin >> loginName;
         
         if (!std::cin) {
@@ -63,8 +63,18 @@ public:
         return password;
     }
 
+    bool isFileEmpty(const std::string& filename) {
+        std::ifstream file(filename);
+        return file.peek() == std::ifstream::traits_type::eof();
+    }
+
     void createPasswordLog()
     {
+        if(isFileEmpty("login.txt"))
+        {
+            createLogin();
+        }
+
         std::string inputSiteName;
         std::cout << "\nEnter site: ";
         std::cin >> inputSiteName;
@@ -74,9 +84,9 @@ public:
             return;
         }
 
-        SetSiteName(inputSiteName);
+        setSiteName(inputSiteName);
         std::string inputPassword = generateStrongPassword();
-        SetPassword(inputPassword);
+        setPassword(inputPassword);
 
         std::string loginPath = "login.txt";
         std::fstream fs1;
@@ -104,34 +114,45 @@ public:
             return;
         }
         
-        fs << std::endl << "Site: " << GetSiteName() << std::endl << "Login: " << outLogin << std::endl << "Password: " << GetPassword() << std::endl;
-
-        fs.close();
+        fs << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << outLogin << std::endl << "Password: " << getPassword() << std::endl;
+        std::cout << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << outLogin << std::endl << "Password: " << getPassword() << std::endl;
+        char answer = 'n';
+        std::cout << std::endl << "Continue? (y/n) ";
+        std::cin >> answer;
+        if (answer == 'y')
+        {
+            fs.close();
+        }
+        else
+        {
+            fs.close();
+            exit(0);
+        }
     }
 
-    void SetSiteName(std::string str)
+    void setSiteName(std::string str)
     {
         this->siteName = str;
     }
-    std::string GetSiteName()
+    std::string getSiteName()
     {
         return this->siteName;
     }
 
-    void SetPassword(std::string str)
+    void setPassword(std::string str)
     {
         this->password = str;
     }
-    std::string GetPassword()
+    std::string getPassword()
     {
         return this->password;
     }
 
-    void SetLogin(std::string str)
+    void setLogin(std::string str)
     {
         this->login = str;
     }
-    std::string GetLogin()
+    std::string getLogin()
     {
         return this->login;
     }
@@ -142,7 +163,7 @@ private:
     std::string siteName;
 };
 
-void PrintTitle()
+void printTitle()
 {
     std::cout << "⌜⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⌝" << std::endl;
     std::cout << "|                      Password Manager                        |" << std::endl;
@@ -158,24 +179,18 @@ int main()
     while(flag)
     {
         system("clear");
-        PrintTitle();
-        std::cout << "1. Enter login." << std::endl;
-        std::cout << "2. Generate password." << std::endl;
-        std::cout << "3. Exit." << std::endl;
+        printTitle();
+        std::cout << "1. Generate password." << std::endl;
+        std::cout << "2. Exit." << std::endl;
         std::cin >> k;
         switch(k)
         {
             case 1:
                 system("clear");
-                PrintTitle();
-                pd.CreateLogin();
-                break;
-            case 2:
-                system("clear");
-                PrintTitle();
+                printTitle();
                 pd.createPasswordLog();
                 break;
-            case 3:
+            case 2:
                 flag = false;
                 exit(0);
                 break;
