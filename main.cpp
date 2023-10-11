@@ -1,8 +1,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
+#include <algorithm>
+#include <cstdlib>
+#include <random>
 
-class PasswordGenerator
+class PasswordManager
 {
 public:
     void CreateLogin()
@@ -30,7 +34,43 @@ public:
         fs.close();
     }
 
-    void CreatePasswordLog()
+    std::string generateStrongPassword() {
+        const std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
+        const std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const std::string numbers = "0123456789";
+        const std::string specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+        // Create a pool of characters for the remaining part of the password
+        const std::string remainingChars = lowercase + lowercase + lowercase;
+
+        srand(time(0));
+
+        // Create the password with the required characters
+        std::string password;
+        password.push_back(uppercase[rand() % uppercase.length()]);
+        password.push_back(numbers[rand() % numbers.length()]);
+        password.push_back(specialChars[rand() % specialChars.length()]);
+        password.push_back(uppercase[rand() % uppercase.length()]);
+        password.push_back(numbers[rand() % numbers.length()]);
+        password.push_back(specialChars[rand() % specialChars.length()]);
+        password.push_back(uppercase[rand() % uppercase.length()]);
+        password.push_back(numbers[rand() % numbers.length()]);
+        password.push_back(specialChars[rand() % specialChars.length()]);
+
+        // Calculate the remaining length
+        int remainingLength = 24;
+
+        // Fill the rest of the password with random characters
+        for (int i = 0; i < remainingLength; ++i) {
+            password.push_back(remainingChars[rand() % remainingChars.length()]);
+        }
+
+        std::random_shuffle(password.begin(), password.end());
+
+        return password;
+    }
+
+    void createPasswordLog()
     {
         std::string inputSiteName;
         std::cout << "\nEnter site: ";
@@ -42,16 +82,7 @@ public:
         }
 
         SetSiteName(inputSiteName);
-
-        std::string inputPassword;
-        std::cout << "Enter password: ";
-        std::cin >> inputPassword;
-
-        if (!std::cin) {
-            std::cerr << "Error reading input for password. Aborting." << std::endl;
-            return;
-        }
-
+        std::string inputPassword = generateStrongPassword();
         SetPassword(inputPassword);
 
         std::string loginPath = "login.txt";
@@ -127,7 +158,7 @@ void PrintTitle()
 
 int main()
 {
-    PasswordGenerator pd;
+    PasswordManager pd;
     int k = 0; 
     bool flag = true;
 
@@ -149,7 +180,7 @@ int main()
             case 2:
                 system("clear");
                 PrintTitle();
-                pd.CreatePasswordLog();
+                pd.createPasswordLog();
                 break;
             case 3:
                 flag = false;
