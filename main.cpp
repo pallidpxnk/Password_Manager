@@ -40,12 +40,10 @@ public:
         const std::string numbers = "0123456789";
         const std::string specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
-        // Create a pool of characters for the remaining part of the password
-        const std::string remainingChars = lowercase + lowercase + lowercase;
+        const std::string remainingChars = lowercase + uppercase + numbers + specialChars;
 
         srand(time(0));
 
-        // Create the password with the required characters
         std::string password;
         password.push_back(uppercase[rand() % uppercase.length()]);
         password.push_back(numbers[rand() % numbers.length()]);
@@ -53,14 +51,9 @@ public:
         password.push_back(uppercase[rand() % uppercase.length()]);
         password.push_back(numbers[rand() % numbers.length()]);
         password.push_back(specialChars[rand() % specialChars.length()]);
-        password.push_back(uppercase[rand() % uppercase.length()]);
-        password.push_back(numbers[rand() % numbers.length()]);
-        password.push_back(specialChars[rand() % specialChars.length()]);
 
-        // Calculate the remaining length
         int remainingLength = 24;
 
-        // Fill the rest of the password with random characters
         for (int i = 0; i < remainingLength; ++i) {
             password.push_back(remainingChars[rand() % remainingChars.length()]);
         }
