@@ -31,62 +31,76 @@ std::string PasswordManager::generateStrongPassword() {
 
 void PasswordManager::createPasswordLog()
 {
+    bool flag = true;
+    while (flag)
+    {
+        std::cout << "\033[2J\033[H";
+        printTitle();
+        std::string inputLogin;
+        std::string inputSiteName;
+        std::cout << "\nEnter site: ";
+        std::cin >> inputSiteName;
 
-    std::string inputLogin;
-    std::string inputSiteName;
-    std::cout << "\nEnter site: ";
-    std::cin >> inputSiteName;
+        if (!std::cin) {
+            std::cerr << "Error reading input for site name. Aborting." << std::endl;
+            return;
+        }
 
-    if (!std::cin) {
-        std::cerr << "Error reading input for site name. Aborting." << std::endl;
-        return;
-    }
+        std::cout << "\nEnter login: ";
+        std::cin >> inputLogin;
 
-    std::cout << "\nEnter login: ";
-    std::cin >> inputLogin;
+        if (!std::cin) {
+            std::cerr << "Error reading input for site name. Aborting." << std::endl;
+            return;
+        }
 
-    if (!std::cin) {
-        std::cerr << "Error reading input for site name. Aborting." << std::endl;
-        return;
-    }
+        setLogin(inputLogin);
+        setSiteName(inputSiteName);
+        std::string inputPassword = generateStrongPassword();
+        setPassword(inputPassword);
 
-    setLogin(inputLogin);
-    setSiteName(inputSiteName);
-    std::string inputPassword = generateStrongPassword();
-    setPassword(inputPassword);
+        std::string path = "../passwords/passwords.txt";
+        std::fstream fs;
+        fs.open(path, std::fstream::out | std::fstream::app);
 
-    std::string path = "passwords/passwords.txt";
-    std::fstream fs;
-    fs.open(path, std::fstream::out | std::fstream::app);
+        if (!fs.is_open()) {
+            std::cerr << "Error opening file " << path << ". Aborting." << std::endl;
+            return;
+        }
+        
+        std::cout << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
+        
+        std::string answer;
+        while (true) {
+            std::cout << std::endl << "Edit or Continue or move back? (e/c/m) ";
+            std::cin >> answer;
 
-    if (!fs.is_open()) {
-        std::cerr << "Error opening file " << path << ". Aborting." << std::endl;
-        return;
-    }
-    
-    std::cout << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
-    
-    std::string answer;
-    while (true) {
-        std::cout << std::endl << "Edit or Continue? (e/c) ";
-        std::cin >> answer;
-
-        if (answer == "e") {
-            editPasswordEntry();
-            break;
-        } else if (answer == "c") {
-            break;
-        } else {
-            std::cout << "Invalid input. Please enter 'e' to edit or 'c' to continue." << std::endl;
+            if (answer == "e") {
+                editPasswordEntry();
+                fs << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
+                fs.close();
+                flag = false;
+                break;
+            } else if (answer == "c") {
+                fs << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
+                fs.close();
+                break;
+            } else if (answer == "m"){
+                fs << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
+                fs.close();
+                flag = false;
+                break;
+            } else {
+                std::cout << "Invalid input. Please enter 'e' to edit or 'c' to continue or 'm' to move back." << std::endl;
+            }
         }
     }
-
-    fs << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
-    fs.close();
 }
 
 void PasswordManager::editPasswordEntry() 
 {
+    std::cout << "\033[2J\033[H";
+    printTitle();
     std::string inputLogin;
     std::string inputSiteName;
     std::cout << "\nEnter site: ";
@@ -129,7 +143,7 @@ void PasswordManager::editPasswordEntry()
 }
 
 void PasswordManager::showAllPasswords() {
-    std::string path = "passwords/passwords.txt";
+    std::string path = "../passwords/passwords.txt";
     std::ifstream file(path);
 
     if (!file.is_open()) {
@@ -172,6 +186,13 @@ void PasswordManager::showAllPasswords() {
         }
     }
     file.close();
+}
+
+void PasswordManager::printTitle()
+{
+    std::cout << "⌜⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⁻⌝" << std::endl;
+    std::cout << "|                      Password Manager                        |" << std::endl;
+    std::cout << "⌞₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋₋⌟" << std::endl;
 }
 
 void PasswordManager::setSiteName(std::string str)

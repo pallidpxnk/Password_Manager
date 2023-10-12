@@ -6,7 +6,6 @@
 #include <fstream>
 #include <ctime>
 #include <algorithm>
-#include <cstdlib>
 #include <random>
 #include <iomanip>
 
@@ -18,7 +17,7 @@ public:
     void createPasswordLog();
     void editPasswordEntry();
     void showAllPasswords();
-
+    void printTitle();
     void setSiteName(std::string str);
     std::string getSiteName();
 
