@@ -9,30 +9,6 @@
 class PasswordManager
 {
 public:
-    void createLogin()
-    {
-        std::string loginName;
-        std::cout << "\nEnter login(gmail): ";
-        std::cin >> loginName;
-        
-        if (!std::cin) {
-            std::cerr << "Error reading input. Aborting." << std::endl;
-            return;
-        }
-
-        std::string path = "login.txt";
-        std::fstream fs;
-        fs.open(path, std::fstream::out);
-
-        if (!fs.is_open()) {
-            std::cerr << "Error opening file " << path << ". Aborting." << std::endl;
-            return;
-        }
-
-        fs << loginName << std::endl;
-
-        fs.close();
-    }
 
     std::string generateStrongPassword() {
         const std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
@@ -63,18 +39,10 @@ public:
         return password;
     }
 
-    bool isFileEmpty(const std::string& filename) {
-        std::ifstream file(filename);
-        return file.peek() == std::ifstream::traits_type::eof();
-    }
-
     void createPasswordLog()
     {
-        if(isFileEmpty("login.txt"))
-        {
-            createLogin();
-        }
 
+        std::string inputLogin;
         std::string inputSiteName;
         std::cout << "\nEnter site: ";
         std::cin >> inputSiteName;
@@ -84,26 +52,18 @@ public:
             return;
         }
 
-        setSiteName(inputSiteName);
-        std::string inputPassword = generateStrongPassword();
-        setPassword(inputPassword);
+        std::cout << "\nEnter login: ";
+        std::cin >> inputLogin;
 
-        std::string loginPath = "login.txt";
-        std::fstream fs1;
-        fs1.open(loginPath, std::fstream::in);
-
-        if (!fs1.is_open()) {
-            std::cerr << "Error opening file " << loginPath << ". Aborting." << std::endl;
+        if (!std::cin) {
+            std::cerr << "Error reading input for site name. Aborting." << std::endl;
             return;
         }
 
-        std::string outLogin;
-        while(!fs1.eof())
-        {
-            fs1 >> outLogin;
-        }
-
-        fs1.close();
+        setLogin(inputLogin);
+        setSiteName(inputSiteName);
+        std::string inputPassword = generateStrongPassword();
+        setPassword(inputPassword);
 
         std::string path = "passwords.txt";
         std::fstream fs;
@@ -114,19 +74,69 @@ public:
             return;
         }
         
-        fs << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << outLogin << std::endl << "Password: " << getPassword() << std::endl;
-        std::cout << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << outLogin << std::endl << "Password: " << getPassword() << std::endl;
-        char answer = 'n';
-        std::cout << std::endl << "Continue? (y/n) ";
-        std::cin >> answer;
-        if (answer == 'y')
-        {
-            fs.close();
+        std::cout << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
+        
+        std::string answer;
+        while (true) {
+            std::cout << std::endl << "Edit or Continue? (e/c) ";
+            std::cin >> answer;
+
+            if (answer == "e") {
+                editPasswordEntry();
+                break;  // Exit the loop if the user chooses to edit
+            } else if (answer == "c") {
+                // Continue with the current operation
+                break;  // Exit the loop if the user chooses to continue
+            } else {
+                std::cout << "Invalid input. Please enter 'e' to edit or 'c' to continue." << std::endl;
+            }
         }
-        else
-        {
-            fs.close();
-            exit(0);
+
+        fs << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
+        fs.close();
+    }
+
+    void editPasswordEntry() 
+    {
+        std::string inputLogin;
+        std::string inputSiteName;
+        std::cout << "\nEnter site: ";
+        std::cin >> inputSiteName;
+
+        if (!std::cin) {
+            std::cerr << "Error reading input for site name. Aborting." << std::endl;
+            return;
+        }
+
+        std::cout << "\nEnter login: ";
+        std::cin >> inputLogin;
+
+        if (!std::cin) {
+            std::cerr << "Error reading input for site name. Aborting." << std::endl;
+            return;
+        }
+        
+        setLogin(inputLogin);
+        setSiteName(inputSiteName);
+        std::string inputPassword = generateStrongPassword();
+        setPassword(inputPassword);
+
+        std::cout << std::endl << "Site: " << getSiteName() << std::endl << "Login: " << getLogin() << std::endl << "Password: " << getPassword() << std::endl;
+
+        std::string answer;
+        while (true) {
+            std::cout << std::endl << "Edit or Continue? (e/c) ";
+            std::cin >> answer;
+
+            if (answer == "e") {
+                editPasswordEntry();
+                break;  // Exit the loop if the user chooses to edit
+            } else if (answer == "c") {
+                // Continue with the current operation
+                break;  // Exit the loop if the user chooses to continue
+            } else {
+                std::cout << "Invalid input. Please enter 'e' to edit or 'c' to continue." << std::endl;
+            }
         }
     }
 
