@@ -55,7 +55,7 @@ void PasswordManager::createPasswordLog()
     std::string inputPassword = generateStrongPassword();
     setPassword(inputPassword);
 
-    std::string path = "passwords.txt";
+    std::string path = "passwords/passwords.txt";
     std::fstream fs;
     fs.open(path, std::fstream::out | std::fstream::app);
 
@@ -129,7 +129,7 @@ void PasswordManager::editPasswordEntry()
 }
 
 void PasswordManager::showAllPasswords() {
-    std::string path = "passwords.txt";
+    std::string path = "passwords/passwords.txt";
     std::ifstream file(path);
 
     if (!file.is_open()) {
