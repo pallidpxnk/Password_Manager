@@ -8,7 +8,7 @@ int main()
 
     while(flag)
     {
-        std::cout << "\033[2J\033[H";
+        system("clear");
         pd.printTitle();
         std::cout << "1. Generate password." << std::endl;
         std::cout << "2. Show all passwords." << std::endl;
@@ -17,12 +17,12 @@ int main()
         switch(k)
         {
             case 1:
-                std::cout << "\033[2J\033[H";
+                system("clear");
                 pd.printTitle();
                 pd.createPasswordLog();
                 break;
             case 2:
-                std::cout << "\033[2J\033[H";
+                system("clear");
                 pd.printTitle();
                 pd.showAllPasswords();
                 break;

@@ -1,11 +1,20 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall
-TARGET = PasswordManagerApp
-SRC = main.cpp PasswordManager.cpp
 
-$(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
+SRCS = main.cpp PasswordManager.cpp
+OBJS = $(SRCS:.cpp=.o)
+EXEC = PasswordManagerApp
 
-.PHONY: clean
+all: $(EXEC)
+
+$(EXEC): $(OBJS)
+	$(CXX) $(OBJS) -o $@
+
+main.o: main.cpp PasswordManager.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+PasswordManager.o: PasswordManager.cpp PasswordManager.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 clean:
-	rm -f $(TARGET)
+	rm -f $(OBJS) $(EXEC)

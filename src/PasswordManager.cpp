@@ -29,12 +29,22 @@ std::string PasswordManager::generateStrongPassword() {
     return password;
 }
 
+void PasswordManager::modifyLogin(const std::string& login, const std::string& siteName) {
+    std::string gmailSuffix = "@gmail.com";
+    if (login.size() >= gmailSuffix.size() &&
+        login.compare(login.size() - gmailSuffix.size(), gmailSuffix.size(), gmailSuffix) == 0) {
+        std::string modifiedLogin = login;
+        modifiedLogin.insert(modifiedLogin.size() - gmailSuffix.size(), "+" + siteName);
+        setLogin(modifiedLogin);
+    }
+}
+
 void PasswordManager::createPasswordLog()
 {
     bool flag = true;
     while (flag)
     {
-        std::cout << "\033[2J\033[H";
+        system("clear");
         printTitle();
         std::string inputLogin;
         std::string inputSiteName;
@@ -56,6 +66,9 @@ void PasswordManager::createPasswordLog()
 
         setLogin(inputLogin);
         setSiteName(inputSiteName);
+
+        modifyLogin(getLogin(), getSiteName());
+        
         std::string inputPassword = generateStrongPassword();
         setPassword(inputPassword);
 
@@ -99,7 +112,7 @@ void PasswordManager::createPasswordLog()
 
 void PasswordManager::editPasswordEntry() 
 {
-    std::cout << "\033[2J\033[H";
+    system("clear");
     printTitle();
     std::string inputLogin;
     std::string inputSiteName;

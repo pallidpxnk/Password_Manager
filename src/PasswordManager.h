@@ -2,6 +2,7 @@
 #define PASSWORDMANAGER_H
 
 #include <iostream>
+#include <stdlib.h>
 #include <string>
 #include <fstream>
 #include <ctime>
@@ -18,6 +19,8 @@ public:
     void editPasswordEntry();
     void showAllPasswords();
     void printTitle();
+    void modifyLogin(const std::string& login, const std::string& siteName);
+
     void setSiteName(std::string str);
     std::string getSiteName();
 
