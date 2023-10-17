@@ -32,8 +32,6 @@
 *.app
 
 .vscode/
-login.txt
-passwords.txt
 PasswordManagerApp
 PasswordManager.sh
 
